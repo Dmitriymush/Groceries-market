@@ -1,0 +1,59 @@
+<p-dialog
+  [header]="dialogTitle | translate"
+  [visible]="visible()"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+  (onHide)="onClose()"
+  data-testid="grocery-form-dialog"
+>
+  <div class="form-grid">
+    <div class="form-field">
+      <label>{{ 'GROCERIES.NAME' | translate }}</label>
+      <input
+        pInputText
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+        appAutoFocus
+        data-testid="grocery-name-input"
+      />
+    </div>
+    <div class="form-field">
+      <label>{{ 'GROCERIES.AMOUNT' | translate }}</label>
+      <p-inputnumber
+        [ngModel]="amount()"
+        (ngModelChange)="amount.set($event)"
+        [min]="0.1"
+        [step]="1"
+        data-testid="grocery-amount-input"></p-inputnumber>
+    </div>
+    <div class="form-field">
+      <label>{{ 'GROCERIES.UNIT' | translate }}</label>
+      <p-select
+        [options]="unitOptions"
+        [ngModel]="unit()"
+        (ngModelChange)="unit.set($event)"
+        optionLabel="label"
+        optionValue="value"
+        appendTo="body"
+        data-testid="grocery-unit-select"
+      />
+    </div>
+  </div>
+  <ng-template #footer>
+    <div class="form-actions">
+      <p-button
+        [label]="'COMMON.CANCEL' | translate"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="onClose()"
+        data-testid="grocery-cancel-btn"
+      />
+      <p-button
+        [label]="'COMMON.SAVE' | translate"
+        (onClick)="onSave()"
+        [disabled]="!isValid"
+        data-testid="grocery-save-btn"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

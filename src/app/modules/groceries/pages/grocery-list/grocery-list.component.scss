@@ -1,0 +1,22 @@
+@use 'variables' as *;
+
+.grocery-list-page {
+  max-width: 700px;
+  margin: $spacing-xl auto;
+  padding: 0 $spacing-lg;
+}
+
+.grocery-list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+}
+
+.grocery-list-stats {
+  display: flex;
+  gap: $spacing-sm;
+  color: #888;
+  font-size: 0.875rem;
+  font-weight: 400;
+}

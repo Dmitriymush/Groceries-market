@@ -1,0 +1,27 @@
+@use 'variables' as *;
+@use 'mixins';
+@use 'theme';
+@import 'primeicons/primeicons.css';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.app-dark {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+.p-button-icon-only {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.p-toolbar {
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}

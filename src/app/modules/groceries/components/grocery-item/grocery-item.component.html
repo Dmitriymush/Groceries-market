@@ -1,0 +1,36 @@
+<div class="grocery-item" [class.bought]="item().bought" data-testid="grocery-item">
+  <div class="grocery-item__check">
+    <p-checkbox
+      [ngModel]="item().bought"
+      [binary]="true"
+      (onChange)="onToggle()"
+      data-testid="grocery-item-checkbox"
+    />
+  </div>
+  <div class="grocery-item__info">
+    <span class="grocery-item__name" [class.bought-text]="item().bought" data-testid="grocery-item-name">
+      {{ item().name }}
+    </span>
+    <span class="grocery-item__amount" data-testid="grocery-item-amount">
+      {{ formattedAmount }}
+    </span>
+  </div>
+  <div class="grocery-item__actions">
+    <p-button
+      icon="pi pi-pencil"
+      [rounded]="true"
+      [outlined]="true"
+      severity="info"
+      (onClick)="onEdit()"
+      data-testid="grocery-item-edit"
+    />
+    <p-button
+      icon="pi pi-trash"
+      [rounded]="true"
+      [outlined]="true"
+      severity="danger"
+      (onClick)="onDelete()"
+      data-testid="grocery-item-delete"
+    />
+  </div>
+</div>

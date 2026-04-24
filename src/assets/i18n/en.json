@@ -1,0 +1,44 @@
+{
+  "AUTH": {
+    "LOGIN": "Login",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "SIGN_IN": "Sign In",
+    "INVALID_CREDENTIALS": "Invalid username or password",
+    "WELCOME": "Welcome to Groceries Market"
+  },
+  "GROCERIES": {
+    "TITLE": "My Grocery List",
+    "ADD": "Add Item",
+    "EDIT": "Edit Item",
+    "DELETE": "Delete",
+    "NAME": "Item Name",
+    "AMOUNT": "Amount",
+    "UNIT": "Unit",
+    "BOUGHT": "bought",
+    "MARK_BOUGHT": "Mark as Bought",
+    "NO_ITEMS": "No items in your grocery list yet",
+    "REMAINING": "remaining",
+    "UNITS": {
+      "pcs": "Pieces",
+      "kg": "Kilograms",
+      "liters": "Liters",
+      "packs": "Packs"
+    }
+  },
+  "COMMON": {
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "CONFIRM_DELETE": "Are you sure you want to delete this item?",
+    "CONFIRM_DELETE_TITLE": "Confirm Delete",
+    "YES": "Yes",
+    "NO": "No",
+    "LOGOUT": "Logout",
+    "LANGUAGE": "Language",
+    "SUCCESS": "Success",
+    "ERROR": "Error",
+    "ITEM_ADDED": "Item added successfully",
+    "ITEM_UPDATED": "Item updated successfully",
+    "ITEM_DELETED": "Item deleted successfully"
+  }
+}

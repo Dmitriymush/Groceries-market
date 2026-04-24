@@ -1,0 +1,38 @@
+<p-toolbar>
+  <ng-template #start>
+    <span class="header-title">{{ title() }}</span>
+    @if (username()) {
+      <span class="header-user">&mdash; {{ username() }}</span>
+    }
+  </ng-template>
+  <ng-template #end>
+    <div class="header-actions">
+      <p-button
+        [icon]="isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+        [rounded]="true"
+        [text]="true"
+        (onClick)="themeToggle.emit()"
+        data-testid="theme-toggle"
+      />
+      <p-select
+        [options]="languages"
+        [(ngModel)]="selectedLang"
+        (onChange)="onLangChange($event.value)"
+        optionLabel="label"
+        optionValue="value"
+        [style]="{ width: '100px' }"
+        data-testid="lang-switcher"
+      />
+      @if (logoutVisible()) {
+        <p-button
+          [label]="'COMMON.LOGOUT' | translate"
+          icon="pi pi-sign-out"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="logoutClick.emit()"
+          data-testid="logout-btn"
+        />
+      }
+    </div>
+  </ng-template>
+</p-toolbar>

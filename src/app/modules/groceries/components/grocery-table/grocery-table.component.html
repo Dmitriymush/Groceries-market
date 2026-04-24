@@ -1,0 +1,14 @@
+<div class="grocery-table" data-testid="grocery-table">
+  @for (item of items(); track item.id) {
+    <app-grocery-item
+      [item]="item"
+      (toggleBought)="toggleBought.emit($event)"
+      (edit)="editItem.emit($event)"
+      (delete)="deleteItem.emit($event)"
+    />
+  } @empty {
+    <div class="grocery-table__empty" data-testid="grocery-empty">
+      {{ 'GROCERIES.NO_ITEMS' | translate }}
+    </div>
+  }
+</div>

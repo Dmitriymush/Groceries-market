@@ -1,0 +1,24 @@
+@use 'variables' as *;
+
+:host {
+  display: block;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text-color;
+}
+
+.header-user {
+  margin-left: $spacing-sm;
+  opacity: 0.5;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}

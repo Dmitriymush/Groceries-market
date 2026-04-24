@@ -1,0 +1,42 @@
+<div class="login-page">
+  <div class="login-card">
+    <h1>{{ 'AUTH.WELCOME' | translate }}</h1>
+    <h2>{{ 'AUTH.LOGIN' | translate }}</h2>
+
+    @if (error()) {
+      <div class="login-error" data-testid="login-error">
+        {{ error() | translate }}
+      </div>
+    }
+
+    <div class="login-form">
+      <div class="form-field">
+        <label>{{ 'AUTH.USERNAME' | translate }}</label>
+        <input
+          pInputText
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event)"
+          data-testid="login-username"
+        />
+      </div>
+      <div class="form-field">
+        <label>{{ 'AUTH.PASSWORD' | translate }}</label>
+        <p-password
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          [feedback]="false"
+          [toggleMask]="true"
+          data-testid="login-password"
+        />
+      </div>
+      <p-button
+        [label]="'AUTH.SIGN_IN' | translate"
+        (onClick)="onSubmit()"
+        [loading]="loading()"
+        [disabled]="!username() || !password()"
+        [style]="{ width: '100%' }"
+        data-testid="login-submit"
+      />
+    </div>
+  </div>
+</div>

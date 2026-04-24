@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "demo",
+      "password": "demo123",
+      "name": "Demo User",
+      "token": "mock-jwt-token-demo-user"
+    }
+  ],
+  "groceries": []
+}

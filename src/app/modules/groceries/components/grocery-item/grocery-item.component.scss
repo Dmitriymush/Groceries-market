@@ -1,0 +1,64 @@
+@use 'variables' as *;
+
+.grocery-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #fafafa;
+  }
+
+  &.bought {
+    opacity: 0.55;
+    background-color: #fafcfa;
+  }
+
+  &__check {
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: $text-color;
+
+    &.bought-text {
+      text-decoration: line-through;
+      color: #999;
+    }
+  }
+
+  &__amount {
+    font-size: 0.8rem;
+    color: #999;
+    font-weight: 400;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-xs;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover &__actions {
+    opacity: 1;
+  }
+}

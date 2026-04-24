@@ -1,0 +1,47 @@
+<app-page-header
+  [title]="'GROCERIES.TITLE' | translate"
+  [username]="username()"
+  [currentLang]="currentLang()"
+  [isDark]="themeService.isDark()"
+  (langChange)="onLangChange($event)"
+  (logoutClick)="onLogout()"
+  (themeToggle)="themeService.toggle()"
+/>
+
+<div class="grocery-list-page">
+  <div class="grocery-list-toolbar">
+    <div class="grocery-list-stats" data-testid="grocery-stats">
+      @if (vm().hasItems) {
+        <span>{{ vm().remainingCount }} {{ 'GROCERIES.REMAINING' | translate }}</span>
+        <span>&middot;</span>
+        <span>{{ vm().boughtCount }} {{ 'GROCERIES.BOUGHT' | translate }}</span>
+      }
+    </div>
+    <p-button
+      [label]="'GROCERIES.ADD' | translate"
+      icon="pi pi-plus"
+      (onClick)="onAddItem()"
+      data-testid="add-item-btn"
+    />
+  </div>
+
+  @if (vm().loading) {
+    <app-loading-spinner />
+  } @else {
+    <app-grocery-table
+      [items]="vm().items"
+      (toggleBought)="onToggleBought($event)"
+      (editItem)="onEditItem($event)"
+      (deleteItem)="onDeleteItem($event)"
+    />
+  }
+</div>
+
+<app-grocery-form-dialog
+  [visible]="dialogVisible()"
+  [editItem]="editingItem()"
+  (visibleChange)="dialogVisible.set($event)"
+  (save)="onSaveItem($event)"
+/>
+
+<app-confirm-dialog />
