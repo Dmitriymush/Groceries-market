@@ -2,7 +2,13 @@
 
 A grocery list management application built with **Angular 21**, **PrimeNG**, and **json-server**.
 
-Users can log in, manage a personal grocery list (add, edit, delete items), set amounts with units, and mark items as bought. The app supports **i18n** (English / Ukrainian), **dark/light theme** with system preference detection and manual toggle, and follows enterprise Angular architecture patterns.
+Users can log in, manage a personal grocery list (add, edit, delete items), set amounts with units, and mark items as bought. The app supports **real-time sync** via WebSocket simulation, **offline mode** with IndexedDB caching and sync queue, **i18n** (English / Ukrainian), **dark/light theme** with system preference detection, and follows enterprise Angular architecture patterns.
+
+## Live Demo
+
+**[groceries-market.vercel.app](https://groceries-market.vercel.app)** — deployed on Vercel with serverless mock API
+
+Demo credentials: `demo` / `demo123`
 
 ## Screenshots
 
@@ -26,18 +32,41 @@ Users can log in, manage a personal grocery list (add, edit, delete items), set 
 |---------------|-------------------|
 | ![Dark Bought](screenshots/dark-04-mark-bought.png) | ![Dark Delete](screenshots/dark-05-delete-confirm.png) |
 
+## Features
+
+### Core
+- **Login/logout** with token-based auth, route guards, and HTTP interceptors
+- **Full CRUD** — add, edit, delete grocery items with form validation
+- **Amount & unit tracking** — pieces, kilograms, liters, packs
+- **Mark as bought** — checkbox with strikethrough, optimistic UI updates
+
+### Advanced
+- **Real-time sync (WebSocket mock)** — simulates live collaboration with other users. Events (add/update/delete/toggle) from virtual users trigger toast notifications and automatic list refresh. Header shows a live connection status indicator (green = connected, amber pulse = reconnecting, grey = disconnected)
+- **Offline support (Service Worker + IndexedDB)** — custom service worker caches static assets (cache-first) and API responses (network-first with fallback). IndexedDB stores grocery items locally. When offline, all mutations (add/edit/delete/toggle) are queued and automatically replayed when connectivity returns. An amber offline banner appears when disconnected
+- **Optimistic updates** — toggle and delete operations update the UI instantly via signal mutations, syncing with the server in the background. On error, changes are rolled back
+
+### UI/UX
+- **Dark/light theme** — auto-detects OS preference, manual toggle, persisted in localStorage
+- **Internationalization** — English and Ukrainian with runtime language switching
+- **Responsive design** with PrimeNG Aura theme
+- **Toast notifications** for success, error, and real-time events
+- **Confirmation dialogs** for destructive actions
+- **Auto-focus** on form inputs
+
 ## Tech Stack
 
 | Technology | Version | Purpose |
 |-----------|---------|---------|
-| Angular | 21.2 | Frontend framework |
-| PrimeNG | 20 | UI component library (Aura theme) |
-| json-server | 0.17 | Mock REST API |
-| ngx-translate | 16 | i18n (EN, UA) |
-| Vitest | 4 | Unit testing (69 tests) |
-| Playwright | latest | E2E testing (12 tests) |
+| Angular | 21.2 | Frontend framework (standalone components, signals) |
+| PrimeNG | 21 | UI component library (Aura theme) |
+| json-server | 0.17 | Mock REST API (development) |
+| Vercel Serverless | - | Mock API (production deployment) |
+| ngx-translate | 17 | i18n (EN, UA) |
+| Vitest | 4 | Unit testing (77 tests) |
+| Playwright | 1.59 | E2E testing (12 tests) |
 | SCSS | - | Styling with variables, mixins, theming |
 | TypeScript | 5.9 | Strict mode enabled |
+| IndexedDB | - | Offline data storage + sync queue |
 
 ## Getting Started
 
@@ -49,7 +78,7 @@ Users can log in, manage a personal grocery list (add, edit, delete items), set 
 ### Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Dmitriymush/Groceries-market.git
 cd Groceries-market
 npm install
 npx playwright install chromium
@@ -94,8 +123,8 @@ src/app/
     auth/                  # Auth service + helper
     guards/                # Route protection (auth, no-auth)
     interceptors/          # HTTP interceptors (apiUrl, auth, error)
-    services/              # Business logic + ViewModel (GroceryService)
-    models/                # Data interfaces
+    services/              # Business logic, real-time, offline sync
+    models/                # Data interfaces (grocery, auth, websocket)
     helpers/               # Cross-cutting pure helpers
     translate/             # i18n configuration
   modules/                 # Feature modules (lazy-loaded)
@@ -107,11 +136,11 @@ src/app/
       models/              # ViewModel interfaces
   shared/                  # Reusable across modules
     components/            # Confirm dialog, page header, spinner
-    pipes/                 # Strikethrough pipe
     directives/            # Auto-focus directive
-    helpers/               # Validation helpers
-mock-server/               # json-server seed data
+api/                       # Vercel serverless functions (production mock API)
+mock-server/               # json-server seed data (development)
 e2e/                       # Playwright E2E tests
+public/                    # Static assets + service worker
 nginx/                     # Production nginx config
 ```
 
@@ -131,10 +160,10 @@ nginx/                     # Production nginx config
 
 | Signals | RxJS |
 |---------|------|
-| Component state (loading, editing) | HTTP requests via HttpClient |
+| Component state (loading, editing, connectivity) | HTTP requests via HttpClient |
 | ViewModel composition via `computed()` | Stream transformations (switchMap, catchError) |
-| Service state exposure | Interceptor chains |
-| Dumb component `input()` / `output()` | Error handling pipelines |
+| Service state exposure (items, wsStatus, isOnline) | Interceptor chains |
+| Dumb component `input()` / `output()` | WebSocket event stream |
 
 ### ViewModel Pattern
 
@@ -173,22 +202,58 @@ export abstract class GroceryViewHelper {
 
 Used at three levels: `core/helpers/` (cross-cutting), `core/auth/` (auth-specific), `modules/*/helpers/` (module-scoped).
 
-### Optimistic Updates
+## Real-Time Sync (WebSocket Mock)
 
-Toggle bought and delete operations update the UI instantly via signal mutations, then sync with the server in the background. On error, changes are rolled back.
+The `GroceryWebSocketService` simulates WebSocket-based real-time collaboration:
 
-### Layer Separation
+- **Connection lifecycle**: `disconnected` → `reconnecting` (1.5s delay) → `connected`
+- **Event simulation**: emits random grocery events (add/update/delete/toggle) from virtual users every 20 seconds
+- **UI integration**: `GroceryService` subscribes to events, refreshes the list, and shows toast notifications
+- **Status indicator**: header displays a colored dot — green (live), amber pulsing (reconnecting), grey (disconnected)
 
-| Layer | Responsibility |
-|-------|---------------|
-| `core/api/` | Raw HTTP calls, returns `Observable<T>` |
-| `core/services/` | Business logic, signal state, ViewModel |
-| `core/auth/` | Auth state, token management |
-| `core/guards/` | Route protection |
-| `core/interceptors/` | Request/response transformation |
-| `modules/*/pages/` | Smart components, UI orchestration |
-| `modules/*/components/` | Dumb components, rendering |
-| `shared/` | Cross-module reusable UI |
+The service exposes the same observable-based API (`events$`, `connectionStatus` signal) that a real WebSocket integration would use, making it a drop-in replacement.
+
+## Offline Support
+
+### Service Worker (`public/sw.js`)
+
+Custom service worker implementing two caching strategies:
+- **Static assets**: cache-first (serve from cache, fall back to network)
+- **API responses**: network-first (try network, fall back to cached response)
+
+Registered in `main.ts` after Angular bootstrap.
+
+### IndexedDB Store (`OfflineStoreService`)
+
+Raw IndexedDB wrapper (no library dependency) with two object stores:
+- **grocery_items**: cached grocery list for offline reading
+- **sync_queue**: queued mutations (POST/PATCH/DELETE) for later replay
+
+### Sync Queue (`SyncService`)
+
+- Watches `ConnectivityService.isOnline` signal via `effect()`
+- When connectivity returns, drains the queue and replays each mutation
+- Failed entries are re-enqueued for the next attempt
+- Shows success/error toast with count of synced changes
+
+### Offline UX
+
+- Amber banner: "You're offline — changes will sync when reconnected" (i18n EN/UA)
+- All CRUD operations work offline — mutations are queued transparently
+- `GroceryService.loadItems()` falls back to IndexedDB cache when API is unreachable
+
+## Interceptor Chain
+
+1. **apiUrlInterceptor** — Prepends `environment.apiUrl` to relative API paths
+2. **authInterceptor** — Attaches `Authorization: Bearer <token>` header
+3. **errorInterceptor** — Handles 401 (logout + redirect) and 5xx (toast notification)
+
+## i18n
+
+- Languages: English (en), Ukrainian (ua)
+- Language switcher in the header toolbar
+- Translation files: `src/assets/i18n/en.json`, `src/assets/i18n/ua.json`
+- All UI labels translated, including unit dropdown options and offline banner
 
 ## Dark / Light Theme
 
@@ -198,32 +263,21 @@ Toggle bought and delete operations update the UI instantly via signal mutations
 - **Implementation**: PrimeNG Aura theme with `darkModeSelector: '.app-dark'` — toggling adds/removes the `.app-dark` class on `<html>`
 - **ThemeService** (`core/services/theme.service.ts`): Singleton service exposing `mode` signal, `isDark()` getter, and `toggle()` method
 
-## Interceptor Chain
-
-1. **apiUrlInterceptor** - Prepends `environment.apiUrl` to relative API paths
-2. **authInterceptor** - Attaches `Authorization: Bearer <token>` header
-3. **errorInterceptor** - Handles 401 (logout + redirect) and 5xx (toast notification)
-
-## i18n
-
-- Languages: English (en), Ukrainian (ua)
-- Language switcher in the header toolbar
-- Translation files: `src/assets/i18n/en.json`, `src/assets/i18n/ua.json`
-- All UI labels translated, including unit dropdown options
-
 ## Testing
 
 ### Unit Tests (Vitest)
 
-69 tests across 22 test files covering:
+77 tests across 24 test files covering:
 
 - API layer (HTTP calls with `HttpTestingController`)
 - Services (state transitions, ViewModel computation, optimistic updates)
+- WebSocket service (connection lifecycle, event emission, disconnect)
+- Offline services (IndexedDB store, connectivity detection, sync queue replay)
 - Guards (redirect behavior)
 - Interceptors (token attachment, URL prepending, error handling)
 - Helpers (pure function tests)
 - Components (input rendering, output emission, form validation)
-- Pipes and directives
+- Directives
 
 ```bash
 npm run test
@@ -241,7 +295,16 @@ npm run test
 npm run e2e
 ```
 
-## Production
+## Deployment
+
+### Vercel (Production)
+
+The app deploys to Vercel with zero configuration beyond `vercel.json`:
+
+- **Frontend**: Angular production build served as static SPA
+- **API**: Serverless functions in `api/` directory replicate the json-server mock
+- **Routing**: SPA fallback rewrites non-API routes to `index.html`
+- **Seed data**: 5 pre-loaded grocery items so the demo is immediately usable
 
 ### Build
 
@@ -252,3 +315,7 @@ npm run build
 ### Nginx
 
 Production nginx config included at `nginx/nginx.conf` with SPA fallback routing and API proxy.
+
+## Decisions
+
+See [DECISIONS.md](DECISIONS.md) for detailed explanations of architectural trade-offs — why signals over NgRx, json-server over in-memory API, custom service worker over `@angular/service-worker`, and more.
