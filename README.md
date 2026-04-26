@@ -1,5 +1,7 @@
 # Groceries Market
 
+**[Live Demo](https://groceries-market.vercel.app/)** | Login: `demo` / `demo123`
+
 A grocery list management application built with **Angular 21**, **PrimeNG**, and **json-server**.
 
 Users can log in, manage a personal grocery list (add, edit, delete items), set amounts with units, and mark items as bought. The app supports **real-time sync** via WebSocket simulation, **offline mode** with IndexedDB caching and sync queue, **i18n** (English / Ukrainian), **dark/light theme** with system preference detection, and follows enterprise Angular architecture patterns.
