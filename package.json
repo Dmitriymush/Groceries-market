@@ -37,6 +37,7 @@
     "@angular/cli": "^21.2.8",
     "@angular/compiler-cli": "^21.2.0",
     "@playwright/test": "^1.59.1",
+    "fake-indexeddb": "^6.2.5",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

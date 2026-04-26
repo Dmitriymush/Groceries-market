@@ -39,6 +39,9 @@
     "ERROR": "Error",
     "ITEM_ADDED": "Item added successfully",
     "ITEM_UPDATED": "Item updated successfully",
-    "ITEM_DELETED": "Item deleted successfully"
+    "ITEM_DELETED": "Item deleted successfully",
+    "OFFLINE_BANNER": "You're offline — changes will sync when reconnected",
+    "SYNCED": "Changes synced successfully",
+    "SYNC_FAILED": "Some changes failed to sync"
   }
 }
