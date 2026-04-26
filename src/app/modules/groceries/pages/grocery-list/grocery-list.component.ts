@@ -1,10 +1,13 @@
-import { Component, inject, computed, signal, OnInit } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, OnDestroy } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { GroceryService } from '@core/services/grocery.service';
 import { ThemeService } from '@core/services/theme.service';
 import { AuthService } from '@core/auth/auth.service';
+import { GroceryWebSocketService } from '@core/services/grocery-websocket.service';
+import { ConnectivityService } from '@core/services/connectivity.service';
+import { SyncService } from '@core/services/sync.service';
 import { GroceryItem, GroceryFormData } from '@core/models/grocery.model';
 import { GroceryTableComponent } from '../../components/grocery-table/grocery-table.component';
 import { GroceryFormDialogComponent } from '../../components/grocery-form-dialog/grocery-form-dialog.component';
@@ -28,12 +31,15 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
   templateUrl: './grocery-list.component.html',
   styleUrl: './grocery-list.component.scss',
 })
-export class GroceryListComponent implements OnInit {
+export class GroceryListComponent implements OnInit, OnDestroy {
   private groceryService = inject(GroceryService);
   private authService = inject(AuthService);
   private confirmationService = inject(ConfirmationService);
   private translateService = inject(TranslateService);
   protected themeService = inject(ThemeService);
+  private wsService = inject(GroceryWebSocketService);
+  private connectivityService = inject(ConnectivityService);
+  private _syncService = inject(SyncService);
 
   dialogVisible = signal(false);
   editingItem = signal<GroceryItem | null>(null);
@@ -41,9 +47,16 @@ export class GroceryListComponent implements OnInit {
   protected readonly vm = this.groceryService.vm;
   protected readonly username = computed(() => this.authService.currentUser()?.name ?? '');
   protected readonly currentLang = signal('en');
+  protected readonly wsStatus = this.wsService.connectionStatus;
+  protected readonly isOnline = this.connectivityService.isOnline;
 
   ngOnInit(): void {
     this.groceryService.loadItems();
+    this.wsService.connect();
+  }
+
+  ngOnDestroy(): void {
+    this.wsService.disconnect();
   }
 
   onAddItem(): void {

@@ -20,4 +20,13 @@ export class NotificationService {
       detail,
     });
   }
+
+  showInfo(detail: string): void {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Real-time',
+      detail,
+      life: 4000,
+    });
+  }
 }

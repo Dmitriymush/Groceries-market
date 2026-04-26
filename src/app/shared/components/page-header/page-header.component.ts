@@ -19,6 +19,7 @@ export class PageHeaderComponent {
   currentLang = input<string>('en');
   logoutVisible = input<boolean>(true);
   isDark = input<boolean>(false);
+  wsStatus = input<string>('disconnected');
 
   langChange = output<string>();
   logoutClick = output<void>();

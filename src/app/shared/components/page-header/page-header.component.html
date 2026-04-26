@@ -7,6 +7,17 @@
   </ng-template>
   <ng-template #end>
     <div class="header-actions">
+      <span
+        class="ws-status"
+        [class.ws-connected]="wsStatus() === 'connected'"
+        [class.ws-reconnecting]="wsStatus() === 'reconnecting'"
+        [class.ws-disconnected]="wsStatus() === 'disconnected'"
+        [title]="wsStatus() === 'connected' ? 'Real-time sync active' : wsStatus() === 'reconnecting' ? 'Reconnecting...' : 'Disconnected'"
+        data-testid="ws-status"
+      >
+        <i class="pi pi-circle-fill ws-status-dot"></i>
+        <span class="ws-status-label">{{ wsStatus() === 'connected' ? 'Live' : wsStatus() === 'reconnecting' ? '...' : 'Off' }}</span>
+      </span>
       <p-button
         [icon]="isDark() ? 'pi pi-sun' : 'pi pi-moon'"
         [rounded]="true"

@@ -22,3 +22,35 @@
   align-items: center;
   gap: $spacing-md;
 }
+
+.ws-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.8;
+  cursor: default;
+}
+
+.ws-status-dot {
+  font-size: 0.5rem;
+}
+
+.ws-connected .ws-status-dot {
+  color: #22c55e;
+}
+
+.ws-reconnecting .ws-status-dot {
+  color: #f59e0b;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.ws-disconnected .ws-status-dot {
+  color: #94a3b8;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}

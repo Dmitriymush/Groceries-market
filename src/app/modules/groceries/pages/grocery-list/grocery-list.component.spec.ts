@@ -3,10 +3,14 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { GroceryListComponent } from './grocery-list.component';
 import { GroceryService } from '@core/services/grocery.service';
 import { AuthService } from '@core/auth/auth.service';
+import { GroceryWebSocketService } from '@core/services/grocery-websocket.service';
+import { ConnectivityService } from '@core/services/connectivity.service';
+import { SyncService } from '@core/services/sync.service';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
+import { EMPTY } from 'rxjs';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -43,6 +47,9 @@ describe('GroceryListComponent', () => {
       providers: [
         { provide: GroceryService, useValue: mockGroceryService },
         { provide: AuthService, useValue: { currentUser: signal({ id: 1, name: 'Demo' }), logout: vi.fn() } },
+        { provide: GroceryWebSocketService, useValue: { connect: vi.fn(), disconnect: vi.fn(), connectionStatus: signal('connected'), events$: EMPTY } },
+        { provide: ConnectivityService, useValue: { isOnline: signal(true) } },
+        { provide: SyncService, useValue: { processQueue: vi.fn() } },
         MessageService,
         ConfirmationService,
       ],

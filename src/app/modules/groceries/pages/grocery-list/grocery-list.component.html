@@ -3,12 +3,20 @@
   [username]="username()"
   [currentLang]="currentLang()"
   [isDark]="themeService.isDark()"
+  [wsStatus]="wsStatus()"
   (langChange)="onLangChange($event)"
   (logoutClick)="onLogout()"
   (themeToggle)="themeService.toggle()"
 />
 
 <div class="grocery-list-page">
+  @if (!isOnline()) {
+    <div class="offline-banner" data-testid="offline-banner">
+      <i class="pi pi-wifi-off"></i>
+      <span>{{ 'COMMON.OFFLINE_BANNER' | translate }}</span>
+    </div>
+  }
+
   <div class="grocery-list-toolbar">
     <div class="grocery-list-stats" data-testid="grocery-stats">
       @if (vm().hasItems) {

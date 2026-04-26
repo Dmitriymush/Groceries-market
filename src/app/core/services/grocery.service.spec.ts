@@ -4,14 +4,17 @@ import { GroceryService } from './grocery.service';
 import { GroceryApi } from '@core/api/grocery.api';
 import { AuthService } from '@core/auth/auth.service';
 import { NotificationService } from './notification.service';
-import { of } from 'rxjs';
+import { GroceryWebSocketService } from './grocery-websocket.service';
+import { ConnectivityService } from './connectivity.service';
+import { OfflineStoreService } from './offline-store.service';
+import { of, EMPTY } from 'rxjs';
 import { signal } from '@angular/core';
 import { GroceryItem } from '@core/models/grocery.model';
 
 describe('GroceryService', () => {
   let service: GroceryService;
-  let mockApi: Record<string, ReturnType<typeof vi.fn>>;
-  let mockNotification: Record<string, ReturnType<typeof vi.fn>>;
+  let mockApi: { getAll: ReturnType<typeof vi.fn>; create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; delete: ReturnType<typeof vi.fn> };
+  let mockNotification: { showSuccess: ReturnType<typeof vi.fn>; showError: ReturnType<typeof vi.fn>; showInfo: ReturnType<typeof vi.fn> };
 
   const mockItems: GroceryItem[] = [
     { id: 1, name: 'Apples', amount: 3, unit: 'pcs', bought: false, userId: 1, createdAt: '2026-04-23T10:00:00Z' },
@@ -25,7 +28,7 @@ describe('GroceryService', () => {
       update: vi.fn().mockReturnValue(of({ ...mockItems[0], bought: true })),
       delete: vi.fn().mockReturnValue(of(undefined)),
     };
-    mockNotification = { showSuccess: vi.fn(), showError: vi.fn() };
+    mockNotification = { showSuccess: vi.fn(), showError: vi.fn(), showInfo: vi.fn() };
 
     TestBed.configureTestingModule({
       providers: [
@@ -33,6 +36,9 @@ describe('GroceryService', () => {
         { provide: GroceryApi, useValue: mockApi },
         { provide: AuthService, useValue: { currentUser: signal({ id: 1 }) } },
         { provide: NotificationService, useValue: mockNotification },
+        { provide: GroceryWebSocketService, useValue: { events$: EMPTY, connectionStatus: signal('disconnected') } },
+        { provide: ConnectivityService, useValue: { isOnline: signal(true) } },
+        { provide: OfflineStoreService, useValue: { saveItems: vi.fn().mockResolvedValue(undefined), getItems: vi.fn().mockResolvedValue([]), enqueue: vi.fn().mockResolvedValue(undefined) } },
       ],
     });
     service = TestBed.inject(GroceryService);
