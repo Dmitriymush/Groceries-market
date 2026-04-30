@@ -6,7 +6,69 @@
       "password": "demo123",
       "name": "Demo User",
       "token": "mock-jwt-token-demo-user"
+    },
+    {
+      "username": "dimaarthurtest",
+      "password": "test123",
+      "name": "Dima Arthur",
+      "token": "mock-jwt-token-dimaarthurtest",
+      "id": 2
     }
   ],
-  "groceries": []
+  "groceries": [
+    {
+      "name": "banana",
+      "amount": 1,
+      "unit": "pcs",
+      "bought": false,
+      "userId": 1,
+      "createdAt": "2026-04-30T10:08:51.495Z",
+      "id": 1
+    },
+    {
+      "name": "addtest",
+      "amount": 1,
+      "unit": "pcs",
+      "bought": false,
+      "userId": 1,
+      "createdAt": "2026-04-30T10:13:45.292Z",
+      "id": 2
+    },
+    {
+      "name": "add",
+      "amount": 1,
+      "unit": "pcs",
+      "bought": false,
+      "userId": 1,
+      "createdAt": "2026-04-30T10:23:50.489Z",
+      "id": 3
+    },
+    {
+      "name": "addtest",
+      "amount": 1,
+      "unit": "pcs",
+      "bought": false,
+      "userId": 1,
+      "createdAt": "2026-04-30T10:26:07.408Z",
+      "id": 4
+    },
+    {
+      "name": "test123",
+      "amount": 1,
+      "unit": "pcs",
+      "bought": false,
+      "userId": 1,
+      "createdAt": "2026-04-30T10:27:45.684Z",
+      "id": 6
+    },
+    {
+      "name": "dasd",
+      "amount": 1,
+      "unit": "pcs",
+      "bought": false,
+      "userId": 1,
+      "createdAt": "2026-04-30T11:16:30.871Z",
+      "id": 7
+    }
+  ]
 }

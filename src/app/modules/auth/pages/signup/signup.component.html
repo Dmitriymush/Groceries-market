@@ -1,7 +1,7 @@
 <app-auth-form
-  mode="login"
+  mode="signup"
   [loading]="loading()"
   [error]="error()"
   (submitted)="onSubmit($event)"
-  (switchMode)="goToSignup()"
+  (switchMode)="goToLogin()"
 />

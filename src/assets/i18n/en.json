@@ -4,7 +4,12 @@
     "USERNAME": "Username",
     "PASSWORD": "Password",
     "SIGN_IN": "Sign In",
+    "SIGN_UP": "Sign Up",
+    "NAME": "Full Name",
+    "NO_ACCOUNT": "Don't have an account?",
+    "HAVE_ACCOUNT": "Already have an account?",
     "INVALID_CREDENTIALS": "Invalid username or password",
+    "SIGNUP_ERROR": "Username already exists or signup failed",
     "WELCOME": "Welcome to Groceries Market"
   },
   "GROCERIES": {

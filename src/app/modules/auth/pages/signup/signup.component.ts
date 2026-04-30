@@ -4,13 +4,13 @@ import { AuthService } from '@core/auth/auth.service';
 import { AuthFormComponent, AuthFormData } from '../../components/auth-form/auth-form.component';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-signup',
   standalone: true,
   imports: [AuthFormComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  templateUrl: './signup.component.html',
+  styleUrl: './signup.component.scss',
 })
-export class LoginComponent {
+export class SignupComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -22,20 +22,20 @@ export class LoginComponent {
     this.loading.set(true);
 
     this.authService
-      .login({ username: data.username, password: data.password })
+      .signup({ username: data.username, password: data.password, name: data.name! })
       .subscribe({
         next: () => {
           this.loading.set(false);
-          this.router.navigate(['/groceries']);
+          this.router.navigate(['/login']);
         },
         error: () => {
           this.loading.set(false);
-          this.error.set('AUTH.INVALID_CREDENTIALS');
+          this.error.set('AUTH.SIGNUP_ERROR');
         },
       });
   }
 
-  goToSignup(): void {
-    this.router.navigate(['/signup']);
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

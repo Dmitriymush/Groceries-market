@@ -14,7 +14,6 @@ import { ThemeService } from '@core/services/theme.service';
 })
 export class App {
   private translateService = inject(TranslateService);
-  private themeService = inject(ThemeService);
 
   constructor() {
     this.translateService.setDefaultLang(DEFAULT_LANGUAGE);

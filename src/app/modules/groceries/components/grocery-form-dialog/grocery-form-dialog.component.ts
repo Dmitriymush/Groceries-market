@@ -38,15 +38,18 @@ export class GroceryFormDialogComponent {
 
   constructor() {
     effect(() => {
+      const isVisible = this.visible();
       const item = this.editItem();
-      if (item) {
-        this.name.set(item.name);
-        this.amount.set(item.amount);
-        this.unit.set(item.unit);
-      } else {
-        this.name.set('');
-        this.amount.set(1);
-        this.unit.set('pcs');
+      if (isVisible) {
+        if (item) {
+          this.name.set(item.name);
+          this.amount.set(item.amount);
+          this.unit.set(item.unit);
+        } else {
+          this.name.set('');
+          this.amount.set(1);
+          this.unit.set('pcs');
+        }
       }
     });
   }
@@ -70,6 +73,9 @@ export class GroceryFormDialogComponent {
   }
 
   onClose(): void {
+    this.name.set('');
+    this.amount.set(1);
+    this.unit.set('pcs');
     this.visibleChange.emit(false);
   }
 }

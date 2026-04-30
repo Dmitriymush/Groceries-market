@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthApi } from '@core/api/auth.api';
 import { AuthHelper } from './auth.helper';
-import { LoginRequest, User, StoredAuth } from '@core/models/auth.model';
+import { LoginRequest, SignupRequest, User, StoredAuth } from '@core/models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -29,6 +29,10 @@ export class AuthService {
         AuthHelper.storeAuth({ user, token: user.token });
       })
     );
+  }
+
+  signup(request: SignupRequest): Observable<User> {
+    return this.authApi.signup(request);
   }
 
   logout(): void {

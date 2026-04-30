@@ -10,6 +10,12 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface SignupRequest {
+  username: string;
+  password: string;
+  name: string;
+}
+
 export interface StoredAuth {
   user: User;
   token: string;
